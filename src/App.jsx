@@ -444,6 +444,9 @@ const ppdbRequirements = [
   'Surat Keterangan TK/PAUD jika ada',
 ]
 
+const whatsappDisplayNumber = '081936720051'
+const whatsappNumber = '6281936720051'
+
 const contactDetails = [
   {
     label: 'Alamat',
@@ -457,7 +460,7 @@ const contactDetails = [
   },
   {
     label: 'WhatsApp',
-    value: '+62 8xx-xxxx-xxxx',
+    value: whatsappDisplayNumber,
     Icon: MessageCircle,
   },
   {
@@ -508,18 +511,57 @@ function IconBadge({ Icon, tone = 'blue', className = '' }) {
   )
 }
 
-function SectionHeader({ eyebrow, title, description, light = false }) {
+function SectionHeader({ eyebrow, title, description, light = false, descriptionClassName = '' }) {
   return (
     <div className="max-w-3xl">
       <span className={light ? 'section-kicker-light' : 'section-kicker'}>{eyebrow}</span>
       <h2 className={light ? 'section-heading-light' : 'section-heading'}>{title}</h2>
-      <p className={light ? 'section-copy-light' : 'section-copy'}>{description}</p>
+      <p className={`${light ? 'section-copy-light' : 'section-copy'} ${descriptionClassName}`}>{description}</p>
     </div>
   )
 }
 
 function App() {
   const [menuOpen, setMenuOpen] = useState(false)
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    contact: '',
+    subject: '',
+    message: '',
+  })
+
+  const isContactFormValid = Object.values(contactForm).every((value) => value.trim())
+
+  const handleContactFieldChange = ({ target }) => {
+    const { name, value } = target
+
+    setContactForm((currentForm) => ({
+      ...currentForm,
+      [name]: value,
+    }))
+  }
+
+  const handleContactSubmit = (event) => {
+    event.preventDefault()
+
+    if (!isContactFormValid) {
+      return
+    }
+
+    const whatsappMessage = [
+      'Halo SD Negeri 1 Sembung, saya ingin menyampaikan pesan melalui website.',
+      '',
+      `Nama: ${contactForm.name.trim()}`,
+      `Kontak: ${contactForm.contact.trim()}`,
+      `Subjek: ${contactForm.subject.trim()}`,
+      'Pesan:',
+      contactForm.message.trim(),
+    ].join('\n')
+
+    const whatsappUrl = `https://wa.me/${whatsappNumber}?text=${encodeURIComponent(whatsappMessage)}`
+
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer')
+  }
 
   return (
     <div className="site-shell">
@@ -626,7 +668,7 @@ function App() {
               </div>
             </div>
 
-            <div className="relative mx-auto w-full max-w-xl lg:mx-0">
+            <div className="relative mx-auto w-full max-w-xl lg:mx-0 lg:px-8 lg:pb-10 lg:pt-8">
               <div className="absolute -left-6 top-12 hidden h-24 w-24 rounded-full bg-amber-300/35 blur-2xl md:block" />
               <div className="absolute -right-8 bottom-10 hidden h-28 w-28 rounded-full bg-green-300/35 blur-2xl md:block" />
 
@@ -639,8 +681,8 @@ function App() {
                     className="h-[320px] w-full object-cover sm:h-[420px]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-blue-950/70 via-blue-950/10 to-transparent" />
-                  <div className="absolute left-5 right-5 top-5 flex items-start justify-between gap-4">
-                    <div className="rounded-full bg-white/90 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-blue-700 shadow-sm backdrop-blur">
+                  <div className="absolute left-5 right-5 top-5 flex flex-wrap items-start justify-between gap-3">
+                    <div className="max-w-[68%] rounded-full bg-white/90 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-blue-700 shadow-sm backdrop-blur">
                       Profil Sekolah Dasar Negeri
                     </div>
                     <div className="rounded-full bg-blue-600 px-4 py-2 text-xs font-bold uppercase tracking-[0.22em] text-white shadow-lg">
@@ -665,7 +707,7 @@ function App() {
                 </div>
               </div>
 
-              <div className="absolute -left-4 top-8 hidden max-w-[220px] rounded-[26px] border border-white/80 bg-white/95 p-4 shadow-[0_22px_60px_-28px_rgba(37,99,235,0.35)] backdrop-blur sm:block">
+              <div className="absolute left-[-70px] top-[-40px] z-10 hidden w-full max-w-[240px] rounded-[26px] border border-white/80 bg-white/95 p-4 shadow-[0_22px_60px_-28px_rgba(37,99,235,0.35)] backdrop-blur lg:block">
                 <div className="flex items-center gap-3">
                   <IconBadge Icon={Leaf} tone="green" />
                   <div>
@@ -674,8 +716,8 @@ function App() {
                   </div>
                 </div>
               </div>
-
-              <div className="absolute -right-3 bottom-8 hidden max-w-[240px] rounded-[26px] border border-white/80 bg-white/95 p-4 shadow-[0_22px_60px_-28px_rgba(15,23,42,0.28)] backdrop-blur sm:block">
+              
+              <div className="absolute bottom-[-10px] right-[-100px] z-10 hidden w-full max-w-[260px] rounded-[26px] border border-white/80 bg-white/95 p-4 shadow-[0_22px_60px_-28px_rgba(15,23,42,0.28)] backdrop-blur lg:block">
                 <div className="flex items-center gap-3">
                   <IconBadge Icon={UsersRound} tone="amber" />
                   <div>
@@ -746,34 +788,55 @@ function App() {
           <div className="container-shell">
             <SectionHeader
               eyebrow="Visi Sekolah"
-              title="SERIBU CANDA menjadi identitas visi yang kuat, hangat, dan mudah diingat."
+              title="Visi SD Negeri 1 Sembung dirangkum dalam identitas SERIBU CANDA."
               description='“Terwujudnya generasi yang Sehat, Religius, Berbudaya, Cerdas, Mandiri, dan Amanah (SERIBU CANDA).”'
               light
+              descriptionClassName="hidden"
             />
 
-            <div className="mt-10 overflow-hidden rounded-[32px] border border-white/10 bg-white/10 p-6 backdrop-blur xl:p-8">
-              <div className="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
-                <div className="max-w-3xl">
-                  <div className="inline-flex items-center gap-2 rounded-full bg-white/15 px-4 py-2 text-sm font-semibold text-blue-50">
-                    <Star className="h-4 w-4 text-amber-300" />
-                    Brand Visi Sekolah
-                  </div>
-                  <p className="mt-5 text-3xl font-extrabold leading-tight text-white md:text-4xl">
-                    SERIBU CANDA
-                  </p>
-                  <p className="mt-4 max-w-2xl text-base leading-8 text-blue-100 md:text-lg">
-                    Akronim ini menegaskan arah pembinaan sekolah: sehat dalam tumbuh kembang, religius dalam akhlak,
-                    berbudaya dalam sikap, cerdas dalam berpikir, mandiri dalam bertindak, dan amanah dalam tanggung jawab.
+            <p className="mt-4 max-w-3xl text-base leading-8 text-blue-100 md:text-lg">
+              Identitas ini membantu sekolah menyampaikan visi secara lebih jelas, ringkas, dan mudah diingat oleh
+              peserta didik, orang tua, guru, serta masyarakat.
+            </p>
+
+            <div className="mt-10 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+              <div className="overflow-hidden rounded-[32px] border border-white/12 bg-white/12 p-6 shadow-[0_24px_70px_-38px_rgba(15,23,42,0.42)] backdrop-blur xl:p-8">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/14 px-4 py-2 text-sm font-semibold text-blue-50">
+                  <Star className="h-4 w-4 text-amber-300" />
+                  Rumusan Visi Resmi
+                </div>
+                <div className="mt-6 rounded-[28px] border border-white/14 bg-white/10 p-5 md:p-6">
+                  <p className="text-sm font-bold uppercase tracking-[0.24em] text-blue-100">Visi SD Negeri 1 Sembung</p>
+                  <blockquote className="mt-4 max-w-3xl text-2xl font-extrabold leading-tight text-white md:text-[2rem]">
+                    &ldquo;Terwujudnya generasi yang Sehat, Religius, Berbudaya, Cerdas, Mandiri, dan Amanah
+                    <span className="text-amber-200"> (SERIBU CANDA)</span>.&rdquo;
+                  </blockquote>
+                  <p className="mt-4 max-w-3xl text-sm leading-7 text-blue-100 md:text-base">
+                    Visi ini menjadi arah utama sekolah dalam membentuk peserta didik yang unggul secara karakter,
+                    pembelajaran, tanggung jawab, dan kepedulian terhadap lingkungan sekitar.
                   </p>
                 </div>
+              </div>
 
-                <div className="grid gap-3 sm:grid-cols-2 lg:max-w-md">
-                  {['Sehat', 'Religius', 'Berbudaya', 'Cerdas', 'Mandiri', 'Amanah'].map((label) => (
+              <div className="overflow-hidden rounded-[32px] border border-white/12 bg-white/10 p-6 shadow-[0_24px_70px_-38px_rgba(15,23,42,0.42)] backdrop-blur xl:p-8">
+                <div className="inline-flex items-center gap-2 rounded-full bg-white/14 px-4 py-2 text-sm font-semibold text-blue-50">
+                  <Sparkles className="h-4 w-4 text-amber-300" />
+                  Makna SERIBU CANDA
+                </div>
+                <p className="mt-5 text-3xl font-extrabold leading-tight text-white md:text-4xl">SERIBU CANDA</p>
+                <p className="mt-4 text-base leading-8 text-blue-100">
+                  Akronim ini memudahkan warga sekolah dan masyarakat memahami nilai utama yang ingin diwujudkan
+                  dalam proses pendidikan di SD Negeri 1 Sembung.
+                </p>
+
+                <div className="mt-6 grid gap-3 sm:grid-cols-2">
+                  {visionValues.map(({ title }, index) => (
                     <div
-                      key={label}
-                      className="rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-center text-sm font-semibold text-white shadow-sm"
+                      key={title}
+                      className="rounded-2xl border border-white/14 bg-white/12 px-4 py-4 shadow-sm"
                     >
-                      {label}
+                      <p className="text-xs font-bold uppercase tracking-[0.22em] text-blue-100">Nilai {String(index + 1).padStart(2, '0')}</p>
+                      <p className="mt-2 text-lg font-bold text-white">{title}</p>
                     </div>
                   ))}
                 </div>
@@ -782,10 +845,18 @@ function App() {
 
             <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
               {visionValues.map(({ title, description, Icon, tone }) => (
-                <article key={title} className="rounded-[30px] border border-white/10 bg-white/10 p-6 shadow-sm backdrop-blur-md">
-                  <IconBadge Icon={Icon} tone={tone} />
-                  <h3 className="mt-5 text-xl font-bold text-white">{title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-blue-100">{description}</p>
+                <article
+                  key={title}
+                  className="rounded-[30px] border border-white/14 bg-white/12 p-6 shadow-[0_20px_55px_-36px_rgba(15,23,42,0.5)] backdrop-blur-md"
+                >
+                  <IconBadge Icon={Icon} tone={tone} className='bg-white'/>
+                  <div className="mt-5 flex items-center justify-between gap-3">
+                    <h3 className="text-xl font-bold text-white">{title}</h3>
+                    <span className="rounded-full border border-white/14 bg-white/10 px-3 py-1 text-xs font-bold uppercase tracking-[0.2em] text-blue-100">
+                      Nilai Inti
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm leading-7 text-blue-50/90">{description}</p>
                 </article>
               ))}
             </div>
@@ -1096,7 +1167,7 @@ function App() {
                   </div>
                   <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                     <a
-                      href="https://wa.me/6281803711933?text=Halo%20Panitia%20PPDB%20SD%20Negeri%201%20Sembung"
+                      href={`https://wa.me/${whatsappNumber}?text=Halo%20Panitia%20PPDB%20SD%20Negeri%201%20Sembung`}
                       className="btn-primary inline-flex items-center justify-center gap-2"
                     >
                       <MessageCircle className="h-4 w-4" />
@@ -1118,10 +1189,10 @@ function App() {
             <SectionHeader
               eyebrow="Kontak"
               title="Bagian kontak dibuat lebih profesional dengan informasi penting dan form statis yang rapi."
-              description="Semua elemen pada bagian ini tetap front-end saja, sehingga aman dipakai sekarang dan mudah dikembangkan lagi jika nanti dibutuhkan."
+              description="Form di bawah ini tetap berbasis front-end, tetapi sekarang bisa langsung menyiapkan isi pesan ke WhatsApp sekolah dari data yang diinput pengunjung."
             />
 
-            <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr]">
+            <div className="mt-10 grid gap-6 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
               <div className="soft-card overflow-hidden">
                 <div className="grid gap-5">
                   <div className="rounded-[28px] border border-blue-100 bg-blue-50/80 p-6">
@@ -1161,29 +1232,77 @@ function App() {
                 </div>
               </div>
 
-              <div className="soft-card">
+              <div className="soft-card lg:self-start">
                 <div className="flex items-center gap-3">
                   <IconBadge Icon={Send} tone="amber" />
                   <div>
-                    <p className="text-sm font-bold uppercase tracking-[0.22em] text-amber-600">Form Kontak Statis</p>
+                    <p className="text-sm font-bold uppercase tracking-[0.22em] text-amber-600">Form Kontak WhatsApp</p>
                     <h3 className="mt-1 text-2xl font-bold text-blue-950">Sampaikan pesan atau pertanyaan</h3>
                   </div>
                 </div>
 
-                <form className="mt-6 space-y-4">
+                <form className="mt-6 space-y-4" onSubmit={handleContactSubmit}>
                   <div className="grid gap-4 sm:grid-cols-2">
-                    <input type="text" className="input-field" placeholder="Nama lengkap" />
-                    <input type="text" className="input-field" placeholder="Email / No. HP" />
+                    <input
+                      type="text"
+                      name="name"
+                      value={contactForm.name}
+                      onChange={handleContactFieldChange}
+                      className="input-field"
+                      placeholder="Nama lengkap"
+                      required
+                    />
+                    <input
+                      type="text"
+                      name="contact"
+                      value={contactForm.contact}
+                      onChange={handleContactFieldChange}
+                      className="input-field"
+                      placeholder="Email / No. HP"
+                      required
+                    />
                   </div>
-                  <input type="text" className="input-field" placeholder="Subjek pesan" />
-                  <textarea className="input-field min-h-40 resize-none" placeholder="Tulis pesan Anda di sini" />
+                  <input
+                    type="text"
+                    name="subject"
+                    value={contactForm.subject}
+                    onChange={handleContactFieldChange}
+                    className="input-field"
+                    placeholder="Subjek pesan"
+                    required
+                  />
+                  <textarea
+                    name="message"
+                    value={contactForm.message}
+                    onChange={handleContactFieldChange}
+                    className="input-field min-h-40 resize-none"
+                    placeholder="Tulis pesan Anda di sini"
+                    required
+                  />
+                  <div className="rounded-[26px] border border-blue-100 bg-blue-50/70 p-4">
+                    <div className="flex items-start gap-3">
+                      <IconBadge Icon={MessageCircle} tone="blue" className="h-10 w-10 rounded-xl" />
+                      <div>
+                        <p className="text-sm font-bold text-blue-950">Pesan akan dibuka di WhatsApp</p>
+                        <p className="mt-1 text-sm leading-6 text-slate-600">
+                          Setelah tombol ditekan, isi form otomatis dimasukkan ke chat menuju nomor {whatsappDisplayNumber}.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
                   <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
                     <p className="text-sm leading-6 text-slate-500">
-                      Form ini bersifat statis dan belum mengirim data ke sistem mana pun.
+                      Pastikan data kontak dan isi pesan sudah benar sebelum melanjutkan ke WhatsApp.
                     </p>
-                    <button type="button" className="btn-primary inline-flex items-center justify-center gap-2">
-                      <Send className="h-4 w-4" />
-                      Kirim Pesan
+                    <button
+                      type="submit"
+                      className="btn-whatsapp inline-flex w-full items-center justify-center gap-3 disabled:cursor-not-allowed disabled:opacity-60 sm:w-auto"
+                      disabled={!isContactFormValid}
+                    >
+                      <span className="btn-whatsapp__icon">
+                        <Send className="h-4 w-4" />
+                      </span>
+                      <span className="whitespace-nowrap">Kirim ke WhatsApp</span>
                     </button>
                   </div>
                 </form>
@@ -1238,7 +1357,7 @@ function App() {
               </div>
               <div className="flex items-start gap-3">
                 <Phone className="mt-1 h-4 w-4 flex-none text-blue-200" />
-                <span>+62 8xx-xxxx-xxxx</span>
+                <span>{whatsappDisplayNumber}</span>
               </div>
             </div>
           </div>
@@ -1266,7 +1385,7 @@ function App() {
       </footer>
 
       <a
-        href="https://wa.me/6281234567890?text=Halo%20SD%20Negeri%201%20Sembung"
+        href={`https://wa.me/${whatsappNumber}?text=Halo%20SD%20Negeri%201%20Sembung`}
         aria-label="Hubungi sekolah melalui WhatsApp"
         className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-[0_22px_50px_-22px_rgba(34,197,94,0.8)] transition hover:scale-[1.03] hover:bg-green-600"
       >
