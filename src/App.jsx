@@ -24,14 +24,12 @@ import {
   MapPin,
   Megaphone,
   Menu,
-  MessageCircle,
   MonitorSmartphone,
   NotebookPen,
   PenTool,
   Phone,
   School,
   ScrollText,
-  Send,
   ShieldCheck,
   Sparkles,
   Star,
@@ -461,7 +459,7 @@ const contactDetails = [
   {
     label: 'WhatsApp',
     value: whatsappDisplayNumber,
-    Icon: MessageCircle,
+    Icon: WhatsAppIcon,
   },
   {
     label: 'Jam Operasional',
@@ -499,6 +497,19 @@ const toneClasses = {
     badge: 'bg-amber-400 text-slate-900',
     surface: 'border-amber-100 bg-amber-50/80',
   },
+}
+
+function WhatsAppIcon({ className = '' }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 24 24"
+      fill="currentColor"
+      className={className}
+    >
+      <path d="M19.05 4.94A9.86 9.86 0 0 0 12 2a9.93 9.93 0 0 0-8.62 14.87L2 22l5.3-1.39A9.99 9.99 0 0 0 12 22a10 10 0 0 0 7.05-17.06Zm-7.05 15.38a8.27 8.27 0 0 1-4.22-1.15l-.3-.18-3.15.83.84-3.06-.2-.31A8.32 8.32 0 1 1 12 20.32Zm4.56-6.23c-.25-.12-1.48-.73-1.71-.81-.23-.08-.39-.12-.56.12-.17.25-.65.81-.8.97-.15.17-.29.19-.54.06-.25-.12-1.04-.38-1.98-1.23-.73-.64-1.22-1.43-1.36-1.67-.15-.25-.02-.38.11-.5.11-.11.25-.29.37-.44.12-.15.17-.25.25-.42.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.85-.87 2.08s.89 2.42 1.02 2.58c.12.17 1.75 2.67 4.24 3.75.59.25 1.05.4 1.41.51.59.19 1.12.16 1.54.1.47-.07 1.48-.6 1.69-1.18.21-.58.21-1.08.15-1.18-.06-.1-.23-.16-.48-.29Z" />
+    </svg>
+  )
 }
 
 function IconBadge({ Icon, tone = 'blue', className = '' }) {
@@ -1170,7 +1181,7 @@ function App() {
                       href={`https://wa.me/${whatsappNumber}?text=Halo%20Panitia%20PPDB%20SD%20Negeri%201%20Sembung`}
                       className="btn-primary inline-flex items-center justify-center gap-2"
                     >
-                      <MessageCircle className="h-4 w-4" />
+                      <WhatsAppIcon className="h-4 w-4" />
                       Hubungi Panitia PPDB
                     </a>
                     <a href="#kontak" className="btn-secondary inline-flex items-center justify-center gap-2">
@@ -1234,7 +1245,7 @@ function App() {
 
               <div className="soft-card lg:self-start">
                 <div className="flex items-center gap-3">
-                  <IconBadge Icon={Send} tone="amber" />
+                  <IconBadge Icon={WhatsAppIcon} tone="amber" />
                   <div>
                     <p className="text-sm font-bold uppercase tracking-[0.22em] text-amber-600">Form Kontak WhatsApp</p>
                     <h3 className="mt-1 text-2xl font-bold text-blue-950">Sampaikan pesan atau pertanyaan</h3>
@@ -1281,7 +1292,7 @@ function App() {
                   />
                   <div className="rounded-[26px] border border-blue-100 bg-blue-50/70 p-4">
                     <div className="flex items-start gap-3">
-                      <IconBadge Icon={MessageCircle} tone="blue" className="h-10 w-10 rounded-xl" />
+                      <IconBadge Icon={WhatsAppIcon} tone="blue" className="h-10 w-10 rounded-xl" />
                       <div>
                         <p className="text-sm font-bold text-blue-950">Pesan akan dibuka di WhatsApp</p>
                         <p className="mt-1 text-sm leading-6 text-slate-600">
@@ -1300,7 +1311,7 @@ function App() {
                       disabled={!isContactFormValid}
                     >
                       <span className="btn-whatsapp__icon">
-                        <Send className="h-4 w-4" />
+                        <WhatsAppIcon className="h-4 w-4" />
                       </span>
                       <span className="whitespace-nowrap">Kirim ke WhatsApp</span>
                     </button>
@@ -1389,7 +1400,7 @@ function App() {
         aria-label="Hubungi sekolah melalui WhatsApp"
         className="fixed bottom-5 right-5 z-40 inline-flex h-14 w-14 items-center justify-center rounded-full bg-green-500 text-white shadow-[0_22px_50px_-22px_rgba(34,197,94,0.8)] transition hover:scale-[1.03] hover:bg-green-600"
       >
-        <MessageCircle className="h-6 w-6" />
+        <WhatsAppIcon className="h-6 w-6" />
       </a>
     </div>
   )
